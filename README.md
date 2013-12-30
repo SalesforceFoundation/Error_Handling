@@ -11,7 +11,7 @@ We wanted to compare the outcome when DML was performed in these three different
 - Simple DML wrapped in a try-cach
 - DML Performed through the Database class
 
-** Tests Purpose**
+**Tests Purpose**
 
 The purpose of the following tests is to allow us to inspect the Database.SaveResult records and see other relevant information through the Debug statements in the error log:
 
