@@ -2,11 +2,12 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>Controller</members>
-        <members>Error1_TEST</members>
-        <members>Error2_TEST</members>
-        <members>Error3_TEST</members>
-        <members>Error4_TEST</members>
+        <members>DatabaseInsert_TEST</members>
+        <members>DatabaseUpdate_TEST</members>
         <members>Helper</members>
+        <members>SimpleInsertWithCatch_TEST</members>
+        <members>SimpleUpdateWithCatch_TEST</members>
+        <members>trigger_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>

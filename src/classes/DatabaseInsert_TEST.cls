@@ -1,8 +1,8 @@
 @isTest
-public with sharing class Error2_TEST {
-
+public with sharing class DatabaseInsert_TEST {
+    
     //What result the calling method gets if there is an error in a Database.insert
-    public testmethod static void callFromMethodDatabaseInsert() {
+    public testmethod static void test() {
         Account acc1 = new Account(Name='test');
         insert acc1;
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson', AccountId = acc1.Id, Title = 'VP');

@@ -1,8 +1,8 @@
 @isTest
-public with sharing class Error3_TEST {
+public with sharing class SimpleUpdateWithCatch_TEST {
 
     //What result the calling method gets if there is an error in an update
-    public testmethod static void callFromMethodSimpleUpdateWithCatch() {
+    public testmethod static void test() {
         Account acc1 = new Account(Name='test');
         insert acc1;
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson', AccountId = acc1.Id, Title = 'VP');
@@ -36,5 +36,5 @@ public with sharing class Error3_TEST {
     If we do not manually add an error message to the record, the debug line above prints:
         
         ****Contact:{AccountId=001i000000XTfjrAAD, FirstName=changed, Id=003i000000URRawAAH, LastName=testerson, Title=VP}
-     */      
+     */
 }

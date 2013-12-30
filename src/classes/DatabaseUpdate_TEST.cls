@@ -1,8 +1,8 @@
 @isTest
-public with sharing class Error4_TEST {
+public with sharing class DatabaseUpdate_TEST {
 
     //What result the calling method gets if there is an error in a Database.update
-    public testmethod static void callFromMethodDatabaseUpdate() {
+    public testmethod static void test() {
         Account acc1 = new Account(Name='test');
         insert acc1;
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson', AccountId = acc1.Id, Title = 'VP');
