@@ -1,0 +1,39 @@
+<apex:page controller="Controller">
+
+    <br/>
+    
+    <apex:pageMessages />
+    
+    <apex:form >
+    
+        <apex:commandButton action="{!simpleInsertNoCatch}" value="Simple Insert No Catch"/>
+        <!-- Result - in standard apex:messages (also, automatic email received)
+        Insert failed. First exception on row 0; first error: ENTITY_IS_DELETED, entity is deleted: []
+        Error is in expression '{!simpleInsertNoCatch}' in component <apex:commandButton> in page test1 -->
+    
+        <br/>
+        <apex:commandButton action="{!simpleInsertWithCatch}" value="Simple Insert With Catch"/>
+        <!-- Result - in custom apex:outputText
+        Contact:{AccountId=001i000000XTg2ZAAT, FirstName=test, LastName=testerson, Title=VP} -->
+    
+        <br/>
+        <apex:commandButton action="{!databaseInsert}" value="Database Insert"/>
+        <!-- Result - in custom apex:outputText
+        Database.SaveResult[getErrors=(Database.Error[getFields=();getMessage=entity is deleted;getStatusCode=ENTITY_IS_DELETED;]);getId=null;isSuccess=false;]
+        Record Id: null
+        Error Message: entity is deleted -->
+        
+        <br/>
+        <apex:commandButton action="{!simpleUpdateNoCatch}" value="Simple Update No Catch"/>
+        
+        <br/>
+        <apex:commandButton action="{!simpleUpdateWithCatch}" value="Simple Update With Catch"/>
+        
+        <br/>
+        <apex:commandButton action="{!databaseUpdate}" value="Database Unsert"/>
+        
+    </apex:form>
+    
+    <apex:outputText id="message" value="{!message}" escape="false" />
+    
+</apex:page>
