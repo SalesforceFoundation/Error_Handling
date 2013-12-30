@@ -7,7 +7,7 @@
         <members>Helper</members>
         <members>SimpleInsertWithCatch_TEST</members>
         <members>SimpleUpdateWithCatch_TEST</members>
-        <members>trigger_TEST</members>
+        <members>Trigger_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -15,7 +15,7 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>Test1</members>
+        <members>DeletesParentAcc</members>
         <name>ApexTrigger</name>
     </types>
     <version>29.0</version>

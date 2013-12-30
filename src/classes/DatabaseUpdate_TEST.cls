@@ -38,11 +38,15 @@ public with sharing class DatabaseUpdate_TEST {
         ****Record Id: null
         ****Error Message: entity is deleted
         
-    @TODO: Why in this case there is no element ID?!? We already had it, we are just trying to update. We can find the 
-    Id when using the simple update (through the exception). Why not here??? --> From the docs:
-    (http://www.salesforce.com/us/developer/docs/apexcode/Content/apex_Database_SaveResult_getId.htm)
+    @Question:Why in this case there is no element ID? We already had it, we are just trying to update. We can find the 
+    Id when using the simple update (through the exception). Why not here? 
+    
+    @Answer: From the docs (http://www.salesforce.com/us/developer/docs/apexcode/Content/apex_Database_SaveResult_getId.htm):
         
         "getId() - If this field contains a value, the object was successfully inserted or updated. If this field is empty, 
         the operation was not successful for that object."
+        
+    If we want to associate the error message with the record that caused it we can do what the method processDml in
+    Helper.cls is doing.
     */
 }
