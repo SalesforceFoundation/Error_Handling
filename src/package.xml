@@ -5,7 +5,9 @@
         <members>Controller</members>
         <members>DatabaseInsert_TEST</members>
         <members>DatabaseUpdate_TEST</members>
+        <members>ERR_Handler_TEST</members>
         <members>Helper</members>
+        <members>ParentAccountUpdater</members>
         <members>SimpleInsertWithCatch_TEST</members>
         <members>SimpleUpdateWithCatch_TEST</members>
         <members>Trigger_TEST</members>
@@ -16,8 +18,12 @@
         <name>ApexPage</name>
     </types>
     <types>
-        <members>DeletesParentAcc</members>
+        <members>ERR_Handler</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>Error__c</members>
+        <name>CustomObject</name>
     </types>
     <version>29.0</version>
 </Package>
