@@ -20,7 +20,7 @@ public with sharing class ParentAccountUpdater {
 	        objectsToInsert.add(error);
     	}
     	
-    	Database.insert(objectsToInsert);
-    	Database.update(objectsToUpdate);
+    	Database.insert(objectsToInsert, false);
+    	Database.update(objectsToUpdate, false);
     }
 }
