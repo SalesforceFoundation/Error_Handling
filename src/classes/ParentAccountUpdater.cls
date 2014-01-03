@@ -11,7 +11,7 @@ public with sharing class ParentAccountUpdater {
 	    		objectsToUpdate.add(c.Account);
 	    	}
     	} catch(Exception e) {
-    		System.debug('****Exception thrown: ' + e.getMessage());
+    		System.debug(LoggingLevel.WARN, '****Exception thrown: ' + e.getMessage());
     		Error__c error = new Error__c();
 	        error.Datetime__c = System.now();        
 	        error.Error_Type__c = e.getTypeName();

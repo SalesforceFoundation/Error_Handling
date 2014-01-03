@@ -16,7 +16,7 @@ public with sharing class Helper {
                 System.debug('****Failed Element Id: ' + e.getDmlId(i));
                 System.debug('****Position of failed record in original list: ' + e.getDmlIndex(i));
 	            Integer failedRecordIndex = e.getDmlIndex(i); //Position of failed record in original list
-                records[failedRecordIndex].addError(e.getDmlMessage(i));
+                records[failedRecordIndex].addError(records[failedRecordIndex].get('Id') + ' - ' + e.getDmlMessage(i));
     	   }
     	}
     	return records;
