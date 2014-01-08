@@ -16,7 +16,7 @@ public with sharing class Helper {
                 System.debug('****Failed Element Id: ' + e.getDmlId(i));
                 System.debug('****Position of failed record in original list: ' + e.getDmlIndex(i));
 	            Integer failedRecordIndex = e.getDmlIndex(i); //Position of failed record in original list
-                records[failedRecordIndex].addError(records[failedRecordIndex].get('Id') + ' - ' + e.getDmlMessage(i));
+                addErrorMessage(records[failedRecordIndex], e.getDmlMessage(i));
     	   }
     	}
     	return records;
@@ -45,7 +45,7 @@ public with sharing class Helper {
                    System.debug('****Failed Element Id: ' + e.getDmlId(i));
                    System.debug('****Position of failed record in original list: ' + e.getDmlIndex(i));
                    Integer failedRecordIndex = e.getDmlIndex(i); //Position of failed record in original list
-                   records[failedRecordIndex].addError(e.getDmlMessage(i));
+                   addErrorMessage(records[failedRecordIndex], e.getDmlMessage(i));
      		}
      	}
      	return records;
@@ -63,9 +63,21 @@ public with sharing class Helper {
     	for(Integer i=0; i<results.size(); i++) {
             if(!results[i].isSuccess()) {
                 //Adding error message to the record
-                records[i].addError(results[i].getErrors()[0].getMessage());
+                addErrorMessage(records[i], results[i].getErrors()[0].getMessage());
                 //Here it's we could do some error processing, such as saving it to the database, sending email...
             }
         }
+    }
+    
+    private static void addErrorMessage(SObject record, String defaultMessage) {
+        String message = '';
+        if(record.getSObjectType().getDescribe().getName() != null)
+            message = 'Error on record of type ' + record.getSObjectType().getDescribe().getName() + ' - ';
+        if(record.get('Id') != null)
+            message = message + 'Record ID: ' + record.get('Id') + ' - ';
+        if(record.get('Name') != null)
+            message = message + 'Record Name: ' + record.get('Name') + ' - ';
+        message = message + '"' + defaultMessage + '"';
+        record.addError(message);
     }
 }
