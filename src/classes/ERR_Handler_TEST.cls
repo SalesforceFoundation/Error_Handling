@@ -1,60 +1,107 @@
 @isTest
 public with sharing class ERR_Handler_TEST {
-    
-    public testmethod static void errorsStoredInDatabase() {
 
-        //Note: debug levels are set to warning just to be able to only see our debug messages by changing the log levels
+    //Note: debug levels are set to warning just to be able to only see our debug messages by changing the log levels
+   
+    /** No error record gets saved because**/
+    public testmethod static void oneInvalidContact() {
+    	//To demonstrate that in this case the reentrancy flag does not matter, since the trigger will be run only once
+    	//and everything in it will be rolled back.
+    	ParentAccountUpdater.useReentrancyFlag = false;
+    	
+    	//Create account
+    	Account acc1 = new Account(Name='test1');
+    	insert acc1;
+    	
+    	//Create contact
+        Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', AccountId = acc1.Id, Title = 'VP1');
+        
+        //Delete the account to get the code to throw an exception
+        delete acc1;
+        
+        Test.startTest();
+        Database.SaveResult result = Database.insert(contact1, false);
+        Test.stopTest();
+        
+        System.assertEquals(false, result.isSuccess());
+        
+        //Verify NO error record was created - the operation was rolled back
+        List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c limit 10];
+        System.assertEquals(0, errors.size());
+    }
+    
+    public testmethod static void oneInvalidTwoValidContactsWithReentrancyFlag() {
+        
+        ParentAccountUpdater.useReentrancyFlag = true;
         
         //Create accounts
         Account acc1 = new Account(Name='test1');
         Account acc2 = new Account(Name='test2');
         Account acc3 = new Account(Name='test3');
         insert new Account[] {acc1, acc2, acc3};
-        System.debug(LoggingLevel.WARN, '****IN TEST - Accounts inserted');
         
         //Create contacts
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', AccountId = acc1.Id, Title = 'VP1');
         Contact contact2 = new Contact(FirstName = 'test', LastName = 'testerson2', AccountId = acc2.Id, Title = 'VP2');
-        Contact contact3 = new Contact(FirstName = 'test', LastName = 'testerson3', AccountId = acc3.Id, Title = 'VP3');
-        
+        Contact contact3 = new Contact(FirstName = 'test', LastName = 'testerson3', AccountId = acc3.Id, Title = 'VP3');   
         
         //Delete the account to get the code to throw an exception
         delete acc2;
-        System.debug(LoggingLevel.WARN, '****IN TEST - Account deleted');
         
         Test.startTest();
-        System.debug(LoggingLevel.WARN, '****IN TEST - StartTest called');
-        /*Inserting more than one countact to get around the issue described here: 
-        http://salesforce.stackexchange.com/questions/1496/can-i-force-to-store-information-even-if-the-trigger-throws-an-exception
-        Summary: if every record in the trigger has errors all work done in the trigger, including @future method calls, 
-        sending email, queueing batch jobs, or performing any DML, is rolled back.*/
         List<Contact> contacts = new Contact[]{contact1, contact2, contact3};
         LIST<database.SaveResult> results = Database.insert(contacts, false);
         Test.stopTest();
-        System.debug(LoggingLevel.WARN, 'IN TEST - ****StopTest called');
         
-        //Unfortunately we cannot see error messages added. There is "addError" method in SObjcet but no "getError".
+        //Verify the records that were correctly processed
         System.assertEquals(true, results[0].isSuccess());  
         System.assertEquals(false, results[1].isSuccess()); 
         System.assertEquals(true, results[2].isSuccess()); 
-        for(database.SaveResult result : results) {
-            System.debug(LoggingLevel.WARN, 'IN TEST - ***Record Errors:\n' + result.getErrors());
-        }
         
-        //Verify two contacts were properly inserted. This means the transaction was not rolled back.
+        //Verify two contacts were properly inserted
         list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
         System.assertEquals(2, insertedContacts.size());
-        for(Contact c : insertedContacts) {
-            System.debug(LoggingLevel.WARN, '****ID of inserted contact: ' + c.Id);
-        }
         
-        //Verify error record was created
+        //Verify NO error record was created - the first insert was rolled back, and when second insert run the 
+        //reentrancy flag stopped the code ParentAccountUpdater from running. 
         List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c limit 10];
-        System.assertEquals(1, errors.size());
+        System.assertEquals(0, errors.size()); 
+    }
+    
+    public testmethod static void oneInvalidTwoValidContactsWithoutReentrancyFlag() {
         
-        for(Error__c error : errors) {
-            System.debug('****IN TEST - Error message: ' + error.Full_Message__c);
-            System.debug('****IN TEST - Stack Trace: \n' + error.Stack_Trace__c);
-        }  
+        ParentAccountUpdater.useReentrancyFlag = false;
+        
+        //Create accounts
+        Account acc1 = new Account(Name='test1');
+        Account acc2 = new Account(Name='test2');
+        Account acc3 = new Account(Name='test3');
+        insert new Account[] {acc1, acc2, acc3};
+        
+        //Create contacts
+        Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', AccountId = acc1.Id, Title = 'VP1');
+        Contact contact2 = new Contact(FirstName = 'test', LastName = 'testerson2', AccountId = acc2.Id, Title = 'VP2');
+        Contact contact3 = new Contact(FirstName = 'test', LastName = 'testerson3', AccountId = acc3.Id, Title = 'VP3');   
+        
+        //Delete the account to get the code to throw an exception
+        delete acc2;
+        
+        Test.startTest();
+        List<Contact> contacts = new Contact[]{contact1, contact2, contact3};
+        LIST<database.SaveResult> results = Database.insert(contacts, false);
+        Test.stopTest();
+        
+        //Verify the records that were correctly processed
+        System.assertEquals(true, results[0].isSuccess());  
+        System.assertEquals(false, results[1].isSuccess()); 
+        System.assertEquals(true, results[2].isSuccess()); 
+        
+        //Verify two contacts were properly inserted
+        list<Contact> insertedContacts = [select Id from Contact where Id in :contacts];
+        System.assertEquals(2, insertedContacts.size());
+        
+        //Verify 2 error records were created - one on beforeinsert and one on afterinsert
+        List<Error__c> errors = [select Id, Full_Message__c, Stack_Trace__c from Error__c limit 10];
+        System.assertEquals(2, errors.size()); 
     }
 }

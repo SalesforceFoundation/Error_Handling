@@ -1,6 +1,7 @@
 public with sharing class ParentAccountUpdater {
 
     private static Boolean parentAccsAlreadyUpdated = false;
+    public static Boolean useReentrancyFlag = false;
     
     public static void processContacts(List<Contact> contacts) {
        
@@ -10,6 +11,7 @@ public with sharing class ParentAccountUpdater {
 	        
 	    	try {	
 		    	for(Contact c : contacts) {
+		    		//This is when an exception gets thrown if the parent account has been deleted
 		    		c.Account.Name = 'New Acc Name';
 		    		objectsToUpdate.add(c.Account);
 		    	}
@@ -26,7 +28,8 @@ public with sharing class ParentAccountUpdater {
 	    	Database.insert(objectsToInsert, false);
 	    	Database.update(objectsToUpdate, false);
 	    	
-	    	parentAccsAlreadyUpdated = true;
+	    	if(useReentrancyFlag) 
+	    	  parentAccsAlreadyUpdated = true;
         }
     }
 }
