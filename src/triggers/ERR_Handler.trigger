@@ -3,5 +3,8 @@ after update, before delete, before insert, before update) {
 
     System.debug(LoggingLevel.WARN, '****In Contact Trigger');
     
-    ParentAccountUpdater.processContacts(trigger.new);
+    if(trigger.new[0].FirstName == 'test')
+        ParentAccountUpdater.processContacts(trigger.new);
+    else
+        ParentAccountUpdater2.processContacts(trigger.new);
 }

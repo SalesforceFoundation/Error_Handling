@@ -8,6 +8,7 @@
         <members>ERR_Handler_TEST</members>
         <members>Helper</members>
         <members>ParentAccountUpdater</members>
+        <members>ParentAccountUpdater2</members>
         <members>SimpleInsertWithCatch_TEST</members>
         <members>SimpleUpdateWithCatch_TEST</members>
         <members>Trigger_TEST</members>
