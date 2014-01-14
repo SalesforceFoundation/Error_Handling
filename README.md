@@ -30,3 +30,9 @@ The tests that verifies those pieces of code are working properly are in the Add
 **Visualforce Page Purpose**
 
 The VisualForce page (Test1.page) allows us to see how the error message that we manually put inside the SObject using addError is displayed by default in the apex:pageMessages element. Also, we were able to test that no error message is shown in this element if we use the Database dml methods but don't manually add the error message to the object.
+
+**Database.insert Rollbacks**
+
+The DML methods of the Database class have very interesting behavior. They will roll back for certain types of errors, and then run again with only those records that did not fail in the first try.
+
+For example of how Database.insert behaves look at the tests in the ERR_Handler_TEST class.
