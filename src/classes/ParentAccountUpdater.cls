@@ -5,6 +5,8 @@ public with sharing class ParentAccountUpdater {
     
     public static void processContacts(List<Contact> contacts) {
        
+        System.debug(LoggingLevel.WARN, '****Number of contacts: '  + contacts.size());
+        
         if(!parentAccsAlreadyUpdated) {
 	        List<SObject> objectsToInsert = new List<SObject>(); 	
 	        List<SObject> objectsToUpdate = new List<SObject>();
